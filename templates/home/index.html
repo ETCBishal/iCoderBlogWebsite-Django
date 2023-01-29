@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% block title %}Home | iCoder{% endblock title %}
+
+{% block activeHome %}active{% endblock activeHome %}
+
+{% block body %}
+
+<div class="container my-4">
+
+    <div class="jumbotron">
+        <h1 class="display-4">Welcome To iCoder
+        </h1>
+        <p class="lead">This is a simple hero unit, a simple jumbotron-style component for calling extra attention to
+            featured content or information.</p>
+        <hr class="my-4">
+        <p>It uses utility classes for typography and spacing to space content out within the larger container.</p>
+        <p class="lead">
+            <a class="btn btn-primary btn-lg" href="/blog/" role="button">Learn more</a>
+        </p>
+    </div>
+
+</div>
+
+<style>
+    .card {
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+        border-radius: 10px;
+    }
+
+    .btn:hover {
+        box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
+    }
+</style>
+
+<div class="container">
+
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">Popular Posts of iCoder</h5>
+            <p class="card-text">{{ month }}</p>
+            <hr class="solid">
+            <p class="card-text">"Need is the mother of inventions" -<a
+                    href="https://en.wikipedia.org/wiki/Plato" target="_blank">Plato</a></p>
+            <a href="/blog/" class="btn btn-primary">Visit Posts</a>
+        </div>
+    </div>
+
+</div>
+
+
+{% endblock body %}

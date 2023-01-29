@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+
+    <title>{% block title %}{% endblock title %}</title>
+</head>
+
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <a class="navbar-brand" href="/">Navbar</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item {% block activeHome %}{% endblock activeHome %}">
+                    <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item {% block activeAbout %}{% endblock activeAbout %}">
+                    <a class="nav-link" href="/about">About</a>
+                </li>
+                <li class="nav-item {% block activeBlog %}{% endblock activeBlog %}">
+                    <a class="nav-link" href="/blog">Blog</a>
+                </li>
+                <li class="nav-item {% block activeContact %}{% endblock activeContact %}">
+                    <a class="nav-link" href="/contact">Contact</a>
+                </li>
+            </ul>
+            <form method="get" action="/search" class="form-inline my-2 my-lg-0">
+                <input name="query" id="query" class="form-control mr-sm-2" type="search" placeholder="Search"
+                    aria-label="Search">
+                <button class="btn btn-primary my-2 mx-1 my-sm-0" type="submit">Search</button>
+
+                <!-- Button for signIn modal -->
+                {% if user.is_authenticated %}
+
+                <div class="btn-group">
+                    <button type="button" class="btn btn-primary dropdown-toggle mx-2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      Welcome {{user.username}}
+                    </button>
+                    <div class="dropdown-menu">
+                      <a class="dropdown-item" href="/logout/">Logout</a>
+                    </div>
+                  </div>
+
+                {% else %}
+                <button type="button" class="btn btn-success mx-2" data-toggle="modal" data-target="#signinModal">
+                    Login
+                </button>
+
+                <!-- Button for signUp modal -->
+                <button type="button" class="btn btn-success" data-toggle="modal" data-target="#signupModal">
+                    Sign up
+                </button>
+                {% endif %}
+
+            </form>
+        </div>
+    </nav>
+
+    <!-- Signup Modal -->
+
+    <div class="modal fade" id="signupModal" tabindex="-1" role="dialog" aria-labelledby="signupModal"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="signupModal">Sign Up To iCoder
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form method="post" action="/signup/"> {% csrf_token %}
+                        <div class="form-group">
+                            <label for="fName">First Name</label>
+                            <input name="fName" type="name" class="form-control" id="fName"
+                                placeholder="Your First Name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="lName">Last Name</label>
+                            <input name="lName" type="name" class="form-control" id="lName" placeholder="Your Last Name"
+                                required>
+                        </div>
+                        <div class="form-group">
+                            <label for="username">Username</label>
+                            <input name="username" type="name" class="form-control" id="username"
+                                placeholder="Choose an unique username" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email address</label>
+                            <input name="email" type="email" class="form-control" id="email"
+                                placeholder="name@example.com" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="pass1">Password</label>
+                            <input name="pass1" type="password" class="form-control" id="pass1"
+                                placeholder="Choose a password" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="pass2">Confirm Password</label>
+                            <input name="pass2" type="password" class="form-control" id="pass2"
+                                placeholder="Enter you password again" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- SignIn Modal -->
+
+    <div class="modal fade" id="signinModal" tabindex="-1" role="dialog" aria-labelledby="signinModal"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="signinModal">Login
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form method="post" action="/login/">
+
+                        {% csrf_token %}
+
+                        <div class="form-group">
+                            <label for="username">Username</label>
+                            <input name="loginusername" type="text" class="form-control" id="loginusername"
+                                placeholder="Username" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="loginpass">Password</label>
+                            <input name="loginpass" type="password" class="form-control" id="loginpass"
+                                placeholder="Password" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .alert {
+            position: relative;
+            padding: 0.75rem 1.25rem;
+            margin-bottom: 0;
+            border: 1px solid transparent;
+            border-radius: 0.25rem;
+        }
+    </style>
+
+    {% if messages %}
+    {% for message in messages %}
+
+    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+        <strong>Message: </strong>{{message}}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+
+    {% endfor %}
+    {% endif %}
+
+    {% block body %}{% endblock body %}
+
+
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,142 @@
+{% extends 'base.html' %}
+{% load humanize %}
+{% load static %}
+{% load extras %}
+
+
+{% block title %}BlogPost | Blog{% endblock title %}
+
+{% block activeBlog %}active{% endblock activeBlog %}
+
+{% block body %}
+
+
+<div class="container my-3">
+    <h2 class="blog-post-title mb-1">{{post.title}}</h2>
+    <p class="blog-post-meta">{{ post.timeStamp }} by <a href="/about/">{{post.author}}</a></p>
+    <hr class="solid">
+    <p>{{post.text}}</p>
+    <hr class="solid">
+</div>
+
+<div class="container">
+    <h2>Comment ({{ comments.count }})</h2>
+
+    <form action="/blog/postComment" method="post"> {% csrf_token %}
+
+        <div class="mb-3">
+            <label for="comment" class="form-label">Post Comment</label>
+            <input name="comment" type="text" class="form-control" id="comment" aria-describedby="text">
+        </div>
+        <input type="hidden" name="postSno" value="{{post.sno}}">
+        <input type="hidden" name="parentSno" value="">
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+
+    <hr class="rounded">
+
+    <style>
+        .card:hover {
+            box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
+        }
+    </style>
+
+    {% for comment in comments %}
+
+    <div class="card my-4">
+        <div class=" card-body row mx-0">
+            <div class="col-md-1">
+                <img src="{% static 'user.png' %}" class="rounded mx-auto w-100 d-block p-2" alt="...">
+            </div>
+            <div class="col-md-11">
+
+                {% if comment.user.is_superuser %}
+                <span class="badge badge-secondary">{{comment.user.username}}</span><span
+                    class="badge badge-pill badge-light" style="font-size:13px;">
+                    {{comment.timeStamp | naturaltime}}<img src="{% static 'adminBadge.png' %}"
+                        alt="(Admin)"></span><br>{{comment.comment}}
+
+                {% else %}
+                <span class="badge badge-secondary">{{comment.user.username}}</span><span
+                    class="badge badge-pill badge-light" style="font-size:13px;">
+                    {{comment.timeStamp | naturaltime}}</span><br>{{comment.comment}}
+
+
+
+                {% endif %}
+
+
+                <div class="reply mx-0">
+                    <a class="btn btn-primary btn-sm my-3" data-toggle="collapse" href="#replyBox{{comment.sno}}"
+                        role="button" aria-expanded="false" aria-controls="replyBox{{comment.sno}}">
+                        REPLY
+                    </a>
+
+                    <div class="collapse my-2" id="replyBox{{comment.sno}}">
+                        <div class="card card-body">
+                            <form action="/blog/postComment" method="post"> {% csrf_token %}
+
+                                <div class="mb-3">
+                                    <label for="replyBox" class="form-label">Post a reply</label>
+                                    <input name="comment" type="text" class="form-control" id="replyBox"
+                                        aria-describedby="text" placeholder="Reply">
+                                </div>
+                                <input type="hidden" name="postSno" value="{{post.sno}}">
+                                <input type="hidden" name="parentSno" value="{{comment.sno}}">
+                                <button type="submit" class="btn btn-primary btn-sm">Submit</button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <div class="replies my-2">
+                        <hr class="solid">
+                        <!-- creating our own filter named get_val -->
+                        {% for reply in replyDict|get_val:comment.sno %}
+
+                        <div class="container my-2">
+                            <div class="row my-3">
+                                <div class="col-md-1">
+                                    <img src="{% static 'user.png' %}" class="rounded mx-auto w-100 d-block p-2"
+                                        alt="...">
+                                </div>
+                                <div class="col-md-11">
+
+                                    {% if reply.user.is_superuser %}
+                                    <span class="badge badge-secondary">{{reply.user.username}}</span><span
+                                        class="badge badge-pill badge-light" style="font-size:13px;">
+                                        {{reply.timeStamp | naturaltime}}<img src="{% static 'adminBadge.png' %}"
+                                            alt="(Admin)"></span><br>{{reply.comment}}
+
+                                    {% else %}
+                                    <span class="badge badge-secondary">{{reply.user.username}}</span><span
+                                        class="badge badge-pill badge-light" style="font-size:13px;">
+                                        {{reply.timeStamp | naturaltime}}</span><br>{{reply.comment}}
+
+
+
+                                    {% endif %}
+
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+    </div>
+
+    {% endfor %}
+
+
+
+</div>
+
+{% endblock body %}
